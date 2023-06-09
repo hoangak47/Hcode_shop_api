@@ -16,7 +16,7 @@ module.exports = {
         res.send([]);
       }
     } catch (error) {
-      res.send([]);
+      next(error);
     }
   },
   addToCart: async (req, res, next) => {
