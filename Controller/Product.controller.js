@@ -7,6 +7,8 @@ module.exports = {
     try {
       const { id } = req.params;
 
+      console.log(id);
+
       const url = `https://api-ecom.duthanhduoc.com/products/${id}`;
       let response;
       try {
