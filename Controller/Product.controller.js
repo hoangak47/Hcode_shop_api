@@ -16,12 +16,9 @@ module.exports = {
       try {
         response = await axios.get(url);
       } catch (error) {
-        // error = new Error("Not Found");
-        // error.status = 404;
-        // next(error);
-        res.send({
-          mess:"as"
-        })
+        error = new Error("Not Found");
+        error.status = 404;
+        next(error);
       }
 
       const quantity_product = await MongooseDBModel.findDB(
@@ -38,7 +35,7 @@ module.exports = {
         });
       }
     } catch (error) {
-      error = new Error("Not Found");
+      error = new Error("Not Found a");
       error.status = 404;
       next(error);
     }
