@@ -6,6 +6,8 @@ module.exports = {
   getDetailProduct: async (req, res, next) => {
     try {
       const { id } = req.params;
+      
+      alert(id);
 
       console.log(id);
 
