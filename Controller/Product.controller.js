@@ -4,14 +4,8 @@ const MongooseDBModel = require("../Models/MongooseDB.model");
 
 module.exports = {
   getDetailProduct: async (req, res, next) => {
-    try {
-      const { id } = req.params;
+    const { id } = req.params;
       
-      req.send([
-        {
-          mess:"as"
-        }
-      ])
       const url = `https://api-ecom.duthanhduoc.com/products/${id}`;
       let response;
       try {
@@ -35,11 +29,6 @@ module.exports = {
           quantity: response.data.data.quantity - quantity_product[0].quantity,
         });
       }
-    } catch (error) {
-      error = new Error("Not Found");
-      error.status = 404;
-      next(error);
-    }
   },
   getAllProduct: async (req, res, next) => {
     try {
