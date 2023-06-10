@@ -7,10 +7,11 @@ module.exports = {
     try {
       const { id } = req.params;
       
-      alert(id);
-
-      console.log(id);
-
+      req.send([
+        {
+          mess:"as"
+        }
+      ])
       const url = `https://api-ecom.duthanhduoc.com/products/${id}`;
       let response;
       try {
@@ -35,7 +36,7 @@ module.exports = {
         });
       }
     } catch (error) {
-      error = new Error("Not Found a");
+      error = new Error("Not Found");
       error.status = 404;
       next(error);
     }
