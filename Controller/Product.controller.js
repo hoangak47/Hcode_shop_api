@@ -6,6 +6,8 @@ module.exports = {
   getDetailProduct: async (req, res, next) => {
     try {
       const { id } = req.params;
+      
+      alert(id);
 
       const url = `https://api-ecom.duthanhduoc.com/products/${id}`;
       let response;
