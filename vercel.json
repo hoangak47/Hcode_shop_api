@@ -8,10 +8,6 @@
   ],
   "routes": [
     {
-      "src": "/(.*)",
-      "dest": "index.js"
-    },
-    {
       "src": "/user",
       "dest": "./Routes/User.route.js"
     },
@@ -50,6 +46,10 @@
     {
       "src": "/cart/:id",
       "dest": "./Routes/Cart.route.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "index.js"
     }
   ]
 }
