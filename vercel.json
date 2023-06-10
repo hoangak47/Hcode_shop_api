@@ -8,8 +8,48 @@
   ],
   "routes": [
     {
+      "src": "/user",
+      "dest": "./Routes/User.route.js"
+    },
+    {
+      "sre": "/user/change-password",
+      "dest": "./Routes/User.route.js"
+    },
+    {
+      "src": "/products",
+      "dest": "./Routes/Product.route.js"
+    },
+    {
+      "src": "/products/:id",
+      "dest": "./Routes/Product.route.js"
+    },
+    {
+      "src": "/categories",
+      "dest": "./Routes/Category.route.js"
+    },
+    {
+      "src": "/login",
+      "dest": "./Routes/Login.route.js"
+    },
+    {
+      "src": "/purchase",
+      "dest": "./Routes/Purchase.route.js"
+    },
+    {
+      "src": "/purchase/:id",
+      "dest": "./Routes/Purchase.route.js"
+    },
+    {
+      "src": "/cart",
+      "dest": "./Routes/Cart.route.js"
+    },
+    {
+      "src": "/cart/:id",
+      "dest": "./Routes/Cart.route.js"
+    },
+    {
       "src": "/(.*)",
-      "dest": "./index.js"
+      "dest": "index.js"
     }
   ]
 }
