@@ -28,7 +28,6 @@ module.exports = {
     }
   },
   create: async (req, res, next) => {
-    try {
       const {
         id_user,
         createdAt,
@@ -79,12 +78,9 @@ module.exports = {
       res.status(200).send({
         message: "Success",
       });
-    } catch (error) {
-      next(error);
-    }
+    
   },
   findOne: async (req, res, next) => {
-    try {
       const { id } = req.params;
 
       if (!id) {
@@ -103,12 +99,9 @@ module.exports = {
       } else {
         res.send([]);
       }
-    } catch (error) {
-      next(error);
-    }
+    
   },
   cancel: async (req, res, next) => {
-    try {
       const { id } = req.params;
       const { type } = req.body;
 
@@ -143,8 +136,6 @@ module.exports = {
       res.status(200).send({
         message: "Success",
       });
-    } catch (error) {
-      next(error);
-    }
+    
   },
 };

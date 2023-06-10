@@ -3,7 +3,6 @@ const { ObjectId } = require("mongodb");
 
 module.exports = {
   updateUserInfo: async (req, res, next) => {
-    try {
       const findUser = await MongooseDBModel.findDB(
         {
           _id: new ObjectId(req.body.id),
@@ -32,14 +31,9 @@ module.exports = {
           )
         );
       }
-    } catch (error) {
-      error = new Error("Not Found");
-      error.status = 404;
-      next(error);
-    }
+    
   },
   changePassword: async (req, res, next) => {
-    try {
       const findUser = await MongooseDBModel.findDB(
         {
           _id: new ObjectId(req.body.id),
@@ -62,10 +56,6 @@ module.exports = {
       } else {
         res.send("Wrong password");
       }
-    } catch (error) {
-      error = new Error("Not Found");
-      error.status = 404;
-      next(error);
-    }
+    
   },
 };

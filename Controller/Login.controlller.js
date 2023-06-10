@@ -2,7 +2,7 @@ const MongooseDBModel = require("../Models/MongooseDB.model");
 
 module.exports = {
   login: async (req, res, next) => {
-    try {
+
       const { type, name, email, picture, password, createdAt } = req.body;
 
       const findUser = await MongooseDBModel.findAllDB("User");
@@ -46,10 +46,6 @@ module.exports = {
       } else {
         res.status(400).send("Email is wrong");
       }
-    } catch (error) {
-      error = new Error("Not Found");
-      error.status = 404;
-      next(error);
-    }
+    
   },
 };

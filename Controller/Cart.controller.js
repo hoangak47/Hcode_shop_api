@@ -3,8 +3,7 @@ const MongooseDBModel = require("../Models/MongooseDB.model");
 
 module.exports = {
   getCart: async (req, res, next) => {
-    try {
-      const { id } = req.query;
+    const { id } = req.query;
 
       const cart = await MongooseDBModel.findDB({ id_user: id }, "Carts", {
         createdAt: -1,
@@ -15,12 +14,9 @@ module.exports = {
       } else {
         res.send([]);
       }
-    } catch (error) {
-      next(error);
-    }
   },
   addToCart: async (req, res, next) => {
-    try {
+
       const { id_user, id_product, quantity } = req.body;
 
       const findCartUser = await MongooseDBModel.findDB(
@@ -102,14 +98,12 @@ module.exports = {
           });
         }
       }
-    } catch (error) {
-      next(error);
-    }
+    
   },
   deleteCart: async (req, res, next) => {
     const { id } = req.params;
     const { id_product, quantity } = req.body;
-    try {
+
       const quantityProduct = await MongooseDBModel.findDB(
         {
           id_product: id_product,
@@ -130,9 +124,7 @@ module.exports = {
       res.status(200).send({
         message: "Delete cart successfully",
       });
-    } catch (error) {
-      next(error);
-    }
+    
   },
   updateCart: async (req, res, next) => {
     const { id } = req.params;
