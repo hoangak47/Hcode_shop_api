@@ -3,36 +3,54 @@ const MongooseDBModel = require("../Models/MongooseDB.model");
 
 module.exports = {
   getCart: async (req, res, next) => {
-    try {
-      const { id } = req.query;
+    const { id } = req.query;
 
-      const cart = await MongooseDBModel.findDB({ id_user: id }, "Carts", {
-        createdAt: -1,
-      });
+    const cart = await MongooseDBModel.findDB({ id_user: id }, "Carts", {
+      createdAt: -1,
+    });
 
-      if (cart) {
-        res.status(200).send(cart);
-      } else {
-        res.send([]);
-      }
-    } catch (error) {
-      next(error);
+    console.log(cart);
+
+    if (cart) {
+      res.status(200).send(cart);
+    } else {
+      res.send([]);
     }
   },
   addToCart: async (req, res, next) => {
-    try {
-      const { id_user, id_product, quantity } = req.body;
+    const { id_user, id_product, quantity } = req.body;
 
-      const findCartUser = await MongooseDBModel.findDB(
-        { id_user: id_user, id_product: id_product },
+    const findCartUser = await MongooseDBModel.findDB(
+      { id_user: id_user, id_product: id_product },
+      "Carts"
+    );
+
+    const quantityProduct = await MongooseDBModel.findDB(
+      { id_product: id_product },
+      "quantityProduct"
+    );
+    if (quantityProduct.length === 0) {
+      await MongooseDBModel.insertDB(
+        {
+          ...req.body,
+        },
         "Carts"
       );
 
-      const quantityProduct = await MongooseDBModel.findDB(
-        { id_product: id_product },
+      await MongooseDBModel.insertDB(
+        {
+          id_product: id_product,
+          quantity: quantity,
+        },
         "quantityProduct"
       );
-      if (quantityProduct.length === 0) {
+
+      res.status(200).send({
+        message: "Add to cart successfully",
+      });
+    } else {
+      if (findCartUser.length === 0) {
+        const quantity_ = quantityProduct[0].quantity + quantity;
         await MongooseDBModel.insertDB(
           {
             ...req.body,
@@ -40,10 +58,10 @@ module.exports = {
           "Carts"
         );
 
-        await MongooseDBModel.insertDB(
+        await MongooseDBModel.updateDB(
+          { id_product: id_product },
           {
-            id_product: id_product,
-            quantity: quantity,
+            quantity: quantity_,
           },
           "quantityProduct"
         );
@@ -52,87 +70,59 @@ module.exports = {
           message: "Add to cart successfully",
         });
       } else {
-        if (findCartUser.length === 0) {
-          const quantity_ = quantityProduct[0].quantity + quantity;
-          await MongooseDBModel.insertDB(
-            {
-              ...req.body,
-            },
-            "Carts"
-          );
-
-          await MongooseDBModel.updateDB(
-            { id_product: id_product },
-            {
-              quantity: quantity_,
-            },
-            "quantityProduct"
-          );
-
-          res.status(200).send({
-            message: "Add to cart successfully",
+        const quantity_ = quantityProduct[0].quantity + quantity;
+        if (quantity_ > req.body.quantityProduct) {
+          res.status(400).send({
+            message: "Quantity is not enough",
           });
-        } else {
-          const quantity_ = quantityProduct[0].quantity + quantity;
-          if (quantity_ > req.body.quantityProduct) {
-            res.status(400).send({
-              message: "Quantity is not enough",
-            });
-            return;
-          }
-
-          await MongooseDBModel.updateDB(
-            { id_user: id_user, id_product: id_product },
-            {
-              quantity: quantity_,
-            },
-            "Carts"
-          );
-
-          await MongooseDBModel.updateDB(
-            { id_product: id_product },
-            {
-              quantity: quantity_,
-            },
-            "quantityProduct"
-          );
-
-          res.status(200).send({
-            message: "Add to cart successfully",
-          });
+          return;
         }
+
+        await MongooseDBModel.updateDB(
+          { id_user: id_user, id_product: id_product },
+          {
+            quantity: quantity_,
+          },
+          "Carts"
+        );
+
+        await MongooseDBModel.updateDB(
+          { id_product: id_product },
+          {
+            quantity: quantity_,
+          },
+          "quantityProduct"
+        );
+
+        res.status(200).send({
+          message: "Add to cart successfully",
+        });
       }
-    } catch (error) {
-      next(error);
     }
   },
   deleteCart: async (req, res, next) => {
     const { id } = req.params;
     const { id_product, quantity } = req.body;
-    try {
-      const quantityProduct = await MongooseDBModel.findDB(
-        {
-          id_product: id_product,
-        },
-        "quantityProduct"
-      );
+    const quantityProduct = await MongooseDBModel.findDB(
+      {
+        id_product: id_product,
+      },
+      "quantityProduct"
+    );
 
-      await MongooseDBModel.updateDB(
-        { id_product: id_product },
-        {
-          quantity: quantityProduct[0].quantity - quantity,
-        },
-        "quantityProduct"
-      );
+    await MongooseDBModel.updateDB(
+      { id_product: id_product },
+      {
+        quantity: quantityProduct[0].quantity - quantity,
+      },
+      "quantityProduct"
+    );
 
-      await MongooseDBModel.deleteDB({ _id: new ObjectId(id) }, "Carts");
+    await MongooseDBModel.deleteDB({ _id: new ObjectId(id) }, "Carts");
 
-      res.status(200).send({
-        message: "Delete cart successfully",
-      });
-    } catch (error) {
-      next(error);
-    }
+    res.status(200).send({
+      message: "Delete cart successfully",
+    });
   },
   updateCart: async (req, res, next) => {
     const { id } = req.params;
