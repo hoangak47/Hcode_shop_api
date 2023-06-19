@@ -4,23 +4,40 @@ const MongooseDBModel = require("../Models/MongooseDB.model");
 
 module.exports = {
   getDetailProduct: async (req, res, next) => {
-    const { id } = req.params;
+    try {
+      const { id } = req.params;
 
-    const url = `https://api-ecom.duthanhduoc.com/products/${id}`;
-    const response = await axios.get(url);
+      alert(id);
 
-    const quantity_product = await MongooseDBModel.findDB(
-      { id_product: id },
-      "quantityProduct"
-    );
+      console.log(id);
 
-    if (quantity_product.length === 0) {
-      res.status(200).send(response.data.data);
-    } else {
-      res.status(200).send({
-        ...response.data.data,
-        quantity: response.data.data.quantity - quantity_product[0].quantity,
-      });
+      const url = `https://api-ecom.duthanhduoc.com/products/${id}`;
+      let response;
+      try {
+        response = await axios.get(url);
+      } catch (error) {
+        error = new Error("Not Found");
+        error.status = 404;
+        next(error);
+      }
+
+      const quantity_product = await MongooseDBModel.findDB(
+        { id_product: id },
+        "quantityProduct"
+      );
+
+      if (quantity_product.length === 0) {
+        res.status(200).send(response.data.data);
+      } else {
+        res.status(200).send({
+          ...response.data.data,
+          quantity: response.data.data.quantity - quantity_product[0].quantity,
+        });
+      }
+    } catch (error) {
+      error = new Error("Not Found");
+      error.status = 404;
+      next(error);
     }
   },
   getAllProduct: async (req, res, next) => {
