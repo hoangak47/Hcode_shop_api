@@ -5,11 +5,6 @@ const MongooseDBModel = require("../Models/MongooseDB.model");
 module.exports = {
   getDetailProduct: async (req, res, next) => {
     const { id } = req.params;
-
-    alert(id);
-
-    console.log(id);
-
     const url = `https://api-ecom.duthanhduoc.com/products/${id}`;
     let response;
     try {
