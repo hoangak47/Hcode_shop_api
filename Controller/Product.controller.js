@@ -4,40 +4,34 @@ const MongooseDBModel = require("../Models/MongooseDB.model");
 
 module.exports = {
   getDetailProduct: async (req, res, next) => {
+    const { id } = req.params;
+
+    alert(id);
+
+    console.log(id);
+
+    const url = `https://api-ecom.duthanhduoc.com/products/${id}`;
+    let response;
     try {
-      const { id } = req.params;
-
-      alert(id);
-
-      console.log(id);
-
-      const url = `https://api-ecom.duthanhduoc.com/products/${id}`;
-      let response;
-      try {
-        response = await axios.get(url);
-      } catch (error) {
-        error = new Error("Not Found");
-        error.status = 404;
-        next(error);
-      }
-
-      const quantity_product = await MongooseDBModel.findDB(
-        { id_product: id },
-        "quantityProduct"
-      );
-
-      if (quantity_product.length === 0) {
-        res.status(200).send(response.data.data);
-      } else {
-        res.status(200).send({
-          ...response.data.data,
-          quantity: response.data.data.quantity - quantity_product[0].quantity,
-        });
-      }
+      response = await axios.get(url);
     } catch (error) {
       error = new Error("Not Found");
       error.status = 404;
       next(error);
+    }
+
+    const quantity_product = await MongooseDBModel.findDB(
+      { id_product: id },
+      "quantityProduct"
+    );
+
+    if (quantity_product.length === 0) {
+      res.status(200).send(response.data.data);
+    } else {
+      res.status(200).send({
+        ...response.data.data,
+        quantity: response.data.data.quantity - quantity_product[0].quantity,
+      });
     }
   },
   getAllProduct: async (req, res, next) => {

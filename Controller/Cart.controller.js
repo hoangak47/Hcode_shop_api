@@ -9,18 +9,14 @@ module.exports = {
       createdAt: -1,
     });
 
-      if (cart) {
-        res.status(200).send(cart);
-      } else {
-        res.send([]);
-      }
-    } catch (error) {
-      next(error);
+    if (cart) {
+      res.status(200).send(cart);
+    } else {
+      res.send([]);
     }
   },
   addToCart: async (req, res, next) => {
-    try {
-      const { id_user, id_product, quantity } = req.body;
+    const { id_user, id_product, quantity } = req.body;
 
     const findCartUser = await MongooseDBModel.findDB(
       { id_user: id_user, id_product: id_product },
@@ -96,25 +92,21 @@ module.exports = {
           "quantityProduct"
         );
 
-          res.status(200).send({
-            message: "Add to cart successfully",
-          });
-        }
+        res.status(200).send({
+          message: "Add to cart successfully",
+        });
       }
-    } catch (error) {
-      next(error);
     }
   },
   deleteCart: async (req, res, next) => {
     const { id } = req.params;
     const { id_product, quantity } = req.body;
-    try {
-      const quantityProduct = await MongooseDBModel.findDB(
-        {
-          id_product: id_product,
-        },
-        "quantityProduct"
-      );
+    const quantityProduct = await MongooseDBModel.findDB(
+      {
+        id_product: id_product,
+      },
+      "quantityProduct"
+    );
 
     await MongooseDBModel.updateDB(
       { id_product: id_product },
@@ -126,12 +118,9 @@ module.exports = {
 
     await MongooseDBModel.deleteDB({ _id: new ObjectId(id) }, "Carts");
 
-      res.status(200).send({
-        message: "Delete cart successfully",
-      });
-    } catch (error) {
-      next(error);
-    }
+    res.status(200).send({
+      message: "Delete cart successfully",
+    });
   },
   updateCart: async (req, res, next) => {
     const { id } = req.params;
